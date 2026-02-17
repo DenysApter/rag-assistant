@@ -1,0 +1,15 @@
+{
+  "permissions": {
+    "allow": [
+      "WebSearch",
+      "mcp__ide__getDiagnostics",
+      "Bash(jar:*)",
+      "Bash(python3:*)",
+      "WebFetch(domain:github.com)",
+      "WebFetch(domain:raw.githubusercontent.com)",
+      "WebFetch(domain:www.baeldung.com)",
+      "WebFetch(domain:mohankumarsagadevan.medium.com)",
+      "WebFetch(domain:howtodoinjava.com)"
+    ]
+  }
+}
