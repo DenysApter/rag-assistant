@@ -6,7 +6,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class AskService {
+public class DialogService {
 
     private final LlmClient llmClient;
 

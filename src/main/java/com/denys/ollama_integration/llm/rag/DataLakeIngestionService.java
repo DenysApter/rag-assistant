@@ -1,6 +1,6 @@
 package com.denys.ollama_integration.llm.rag;
 
-import com.denys.ollama_integration.db.vectorstore.VectorStoreService;
+import com.denys.ollama_integration.db.VectorStoreService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.ai.document.Document;

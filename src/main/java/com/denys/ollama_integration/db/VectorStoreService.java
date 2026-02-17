@@ -1,4 +1,4 @@
-package com.denys.ollama_integration.db.vectorstore;
+package com.denys.ollama_integration.db;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.ai.document.Document;
