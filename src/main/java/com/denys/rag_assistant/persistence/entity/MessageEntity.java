@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
@@ -18,6 +19,7 @@ import java.util.UUID;
 @Getter
 @Setter
 @NoArgsConstructor
+@ToString
 public class MessageEntity {
 
     @Id
@@ -25,7 +27,7 @@ public class MessageEntity {
     private UUID id;
 
     @JsonIgnore
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "dialog_id", nullable = false)
     private DialogEntity dialog;
 
@@ -38,8 +40,6 @@ public class MessageEntity {
 
     @Column(nullable = false, columnDefinition = "TEXT")
     private String answer;
-
-    private Long processTimeMs;
 
     @CreationTimestamp
     private Instant createdAt;

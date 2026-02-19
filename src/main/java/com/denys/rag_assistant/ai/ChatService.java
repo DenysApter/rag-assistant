@@ -10,6 +10,8 @@ import org.springframework.ai.vectorstore.VectorStore;
 import org.springframework.ai.vectorstore.filter.FilterExpressionBuilder;
 import org.springframework.stereotype.Component;
 
+import reactor.core.publisher.Flux;
+
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -20,10 +22,13 @@ public class ChatService {
 
     private static final String PROMPT_TEMPLATE = """
             Below is additional context that MAY be relevant to the user's question.
-            Use it only if it is directly relevant. Otherwise, answer the question using your own knowledge.
+            Use only it for answer.
 
             Context:
             {context}
+
+            Conversation history:
+            {history}
 
             User question:
             {query}
@@ -71,5 +76,29 @@ public class ChatService {
         return vectorStore.similaritySearch(searchRequestBuilder.build());
     }
 
+    public StreamAskResult askStreaming(String question, Role userRole) {
+        List<Document> relevantDocs = searchDocuments(question, userRole);
+
+        String context = relevantDocs.stream()
+                .map(Document::getText)
+                .collect(Collectors.joining("\n\n"));
+
+        List<UUID> chunkIds = relevantDocs.stream()
+                .map(doc -> UUID.fromString(doc.getId()))
+                .toList();
+
+        Flux<String> contentStream = chatClient.prompt()
+                .user(u -> u
+                        .text(PROMPT_TEMPLATE)
+                        .param("context", context)
+                        .param("query", question))
+                .stream()
+                .content();
+
+        return new StreamAskResult(contentStream, chunkIds);
+    }
+
     public record AskResult(String answer, List<UUID> contextChunkIds) {}
+
+    public record StreamAskResult(Flux<String> content, List<UUID> contextChunkIds) {}
 }

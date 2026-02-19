@@ -10,11 +10,13 @@ import jakarta.annotation.PreDestroy;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -92,6 +94,17 @@ public class KnowledgeBaseIngestionService {
         vectorStoreService.addChunks(chunks);
         ingestedChunkIds.addAll(chunks.stream().map(Document::getId).toList());
         log.info("Ingested {} chunks into vector store", chunks.size());
+    }
+
+    public void saveFile(MultipartFile file, String folder) throws IOException {
+        Path dir = Paths.get(dataLakePath, folder);
+        Files.createDirectories(dir);
+        String filename = file.getOriginalFilename();
+        if (filename == null || filename.isBlank()) {
+            throw new IllegalArgumentException("File name is missing");
+        }
+        Path target = dir.resolve(filename);
+        Files.copy(file.getInputStream(), target, StandardCopyOption.REPLACE_EXISTING);
     }
 
     private String resolveRole(String relativePath) {

@@ -35,13 +35,12 @@ public class DialogService {
     }
 
     public MessageEntity saveMessage(DialogEntity dialog, String question, String answer,
-                                     List<UUID> contextChunkIds, long processTimeMs) {
+                                     List<UUID> contextChunkIds) {
         var message = new MessageEntity();
         message.setDialog(dialog);
         message.setQuestion(question);
         message.setAnswer(answer);
         message.setContextChunkIds(contextChunkIds);
-        message.setProcessTimeMs(processTimeMs);
         return messageRepository.save(message);
     }
 
